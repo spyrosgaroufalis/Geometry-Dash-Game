@@ -18,12 +18,14 @@ Steps to try the source code yourself =
 ( starting point = the cube falls from the top and lands on the ground )
 
 jumping mechanincs when screen is pressed =
-![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/97b3a488-9845-4cfc-98f1-3ca52d20a9b2)
+![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/fc92c5f7-ac05-4389-839a-2f49dad84718)
+
 
 
 Riding platforms =
-![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/f064b464-855e-4da8-8be8-154bc23b1626)
+![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/c375d339-6a91-4577-acb2-d9bcf52c6c79)
+
 
 
 Collisions and game over =
-![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/1c4bae68-df14-431b-8f23-5d1ca8b9120c)
+![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/f3ff6baf-1755-499e-859f-b3e67337c029)

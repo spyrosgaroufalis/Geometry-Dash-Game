@@ -45,8 +45,8 @@ export default class Platform extends Component {
       player.position.y <= platform.position.y + platform.height &&
       player.position.x + player.width >= platform.position.x &&
       player.position.x <= platform.position.x + platform.width &&
-      player.position.x  <= platform.position.x  &&
-      player.position.y <=platform.position.y
+      player.position.x + player.width >= platform.position.x &&
+      player.position.x <= platform.position.x + platform.width
     ) {
       if (!isCollision) {
         this.setState({ isCollision: true });

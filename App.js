@@ -29,6 +29,7 @@ export default function App() {
       height: 20,
     //  startTime: 5000, // Change appearanceTime to startTime
     },
+    
   ]);
   
 
@@ -38,7 +39,22 @@ export default function App() {
         <Player player={player} platforms={platforms} />
         {platforms.map((platform, index) => (
           <Platform key={index} player={player} platform={platform} />
+          
+
+          
         ))}
+        {platforms.map((platform, index) => (
+          <Image
+          style={[
+            styles.platform,
+            { left: platform.position.x, top: platform.position.y },
+           
+          ]}
+          source={require('./assets/chart.png')}
+        />
+        ))}
+          
+        
       </ImageBackground>
       <Image source={backG} style={styles.backG} />
     </View>
@@ -50,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backG: {
-    width: 100,
+    width: '100%',
     height: 100,
   },
   backgroundImage: {
@@ -59,6 +75,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: width,
     height: height,
+  },
+  platform: {
+    position: 'absolute',
+    width: '5%',
+    height: '5%',
   },
 });
 

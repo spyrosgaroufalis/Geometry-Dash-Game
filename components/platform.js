@@ -1,7 +1,5 @@
-// Platform.js
 import React, { Component } from 'react';
-import { Dimensions } from 'react-native';
-import { View, StyleSheet, Vibration } from 'react-native';
+import { Dimensions, View, StyleSheet, Vibration } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 const platformSpeed = 2;
@@ -12,33 +10,67 @@ export default class Platform extends Component {
     super(props);
 
     this.state = {
-     
       isCollision: false,
+      isAnimationStarted: false,
     };
   }
 
+
+  
   componentDidMount() {
-    this.animate();
+    const { platform } = this.props;
+    const { startTime } = platform;
+    const delay = startTime - Date.now(); // Calculate the delay based on the start time
+  
+    this.animationTimer = setTimeout(() => {
+      this.setState({ isAnimationStarted: true });
+      this.animate();
+    }, delay > 0 ? delay : 0); // Set a minimum delay of 0 if the calculated delay is negative
   }
 
+  componentWillUnmount() {
+    this.stopAnimation();
+  }
+
+  startAnimation = () => {
+    if (this.state.isAnimationStarted) return;
+
+    const { platform } = this.props;
+    const { appearanceTime } = platform;
+
+    this.animationTimer = setTimeout(() => {
+      this.setState({ isAnimationStarted: true });
+      this.animate();
+    }, appearanceTime);
+  };
+
   stopAnimation = () => {
-    cancelAnimationFrame(this.animationFrame);
+    clearTimeout(this.animationTimer);
   };
 
   animate = () => {
-    const { platform } = this.props;
+    const { platform, player } = this.props;
     const { isCollision } = this.state;
-    const { player } = this.props;
-
+  
     if (isCollision) {
       Vibration.vibrate();
       return;
     }
-
+  
+    if (!this.animationStarted) {
+      const { startTime } = platform;
+      const currentTime = new Date().getTime();
+      if (currentTime < startTime) {
+        requestAnimationFrame(this.animate);
+        return;
+      }
+      this.animationStarted = true;
+    }
+  
     platform.position.x -= platformSpeed;
-
+  
     this.setState({ platform });
-
+  
     // Collision detection with the player
     if (
       player.position.y + player.height >= platform.position.y &&
@@ -54,33 +86,43 @@ export default class Platform extends Component {
     } else {
       this.setState({ isCollision: false });
     }
-
+  
     // Check if the platform has gone beyond the left side of the screen
     if (platform.position.x + platform.width < 0) {
       setTimeout(() => {
         platform.position.x = width + 50;
+        this.animationStarted = false; // Reset animation started flag
       }, platformResetDelay);
     }
-
+  
     requestAnimationFrame(this.animate);
   };
+  
 
   render() {
     const { platform } = this.props;
+    const { isAnimationStarted } = this.state;
 
     return (
-      <View
-        style={[
-          styles.platform,
-          { left: platform.position.x, top: platform.position.y },
-          { width: platform.width, height: platform.height },
-        ]}
-      />
+      <View style={styles.container}>
+        {isAnimationStarted && (
+          <View
+            style={[
+              styles.platform,
+              { left: platform.position.x, top: platform.position.y },
+              { width: platform.width, height: platform.height },
+            ]}
+          />
+        )}
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+  },
   platform: {
     position: 'absolute',
     backgroundColor: 'blue',

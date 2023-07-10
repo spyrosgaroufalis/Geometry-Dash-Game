@@ -1,8 +1,7 @@
-// App.js
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import Player from './components/player';
-import backG from './assets/618cff3e20616-large.jpg'
+import backG from './assets/618cff3e20616-large.jpg';
 import Platform from './components/platform';
 
 const { width, height } = Dimensions.get('window');
@@ -16,34 +15,43 @@ export default function App() {
     height: 30,
   });
 
-  const [platform]= useState( {
-    position: { x: width - width / 2, y: height - 20 },
-    width: width / 2,
-    height: 20,
-  });
-
- 
+  const [platforms, setPlatforms] = useState([
+    {
+      position: { x: width - width / 2, y: height - 20 },
+      width: width / 2,
+      height: 20,
+    //  startTime: 0, // Change appearanceTime to startTime
+    },
+    // Add more platforms with different widths, heights, and start times as needed
+    {
+      position: { x: width , y: height - 50 },
+      width: width / 3,
+      height: 20,
+    //  startTime: 5000, // Change appearanceTime to startTime
+    },
+  ]);
+  
 
   return (
-    <View styles= {styles.container}>
-    <ImageBackground source={backG} style={styles.backgroundImage}>
-      <Player player={player} platform={platform}/>
-      <Platform player={player} platform={platform}/>
-      
-    </ImageBackground>
-    <Image source={backG} styles={styles.backG}/>
+    <View style={styles.container}>
+      <ImageBackground source={backG} style={styles.backgroundImage}>
+        <Player player={player} platforms={platforms} />
+        {platforms.map((platform, index) => (
+          <Platform key={index} player={player} platform={platform} />
+        ))}
+      </ImageBackground>
+      <Image source={backG} style={styles.backG} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-   flex: 1,
+    flex: 1,
   },
-  backG:{
-    width : 100,
+  backG: {
+    width: 100,
     height: 100,
-   
   },
   backgroundImage: {
     height: 300,
@@ -53,7 +61,6 @@ const styles = StyleSheet.create({
     height: height,
   },
 });
-
 
 //MULTIPLE JUMPS 
   /*

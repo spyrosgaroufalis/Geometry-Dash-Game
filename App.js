@@ -3,6 +3,7 @@ import { Dimensions, Image, ImageBackground, StyleSheet, Text, View } from 'reac
 import Player from './components/player';
 import backG from './assets/618cff3e20616-large.jpg';
 import Platform from './components/platform';
+import Spike from './components/spikes';
 
 const { width, height } = Dimensions.get('window');
 const gravity = 1.5;
@@ -31,6 +32,23 @@ export default function App() {
     },
     
   ]);
+
+  const [spikes, setspikes] = useState([
+    {
+      position: { x: width - width / 3, y: height - 30 },
+      width: 100,
+      height: 100,
+    //  startTime: 0, // Change appearanceTime to startTime
+    },
+    // Add more spikes with different widths, heights, and start times as needed
+    {
+      position: { x: width - width / 4  , y: height - 60 },
+      width: 10,
+      height: 10,
+    //  startTime: 5000, // Change appearanceTime to startTime
+    },
+    
+  ]);
   
 
   return (
@@ -43,15 +61,8 @@ export default function App() {
 
           
         ))}
-        {platforms.map((platform, index) => (
-          <Image
-          style={[
-            styles.platform,
-            { left: platform.position.x, top: platform.position.y },
-           
-          ]}
-          source={require('./assets/chart.png')}
-        />
+        {spikes.map((spike, index) => (
+          <Spike key={index} player={player} spike={spike} />
         ))}
           
         
@@ -76,11 +87,12 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
   },
-  platform: {
+ /* platform: {
     position: 'absolute',
     width: '5%',
     height: '5%',
   },
+  */
 });
 
 //MULTIPLE JUMPS 

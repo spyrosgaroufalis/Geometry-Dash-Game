@@ -107,7 +107,7 @@ export default class Spike extends Component {
       <View style={styles.container}>
         {isAnimationStarted && (
             
-          <Image source="../assets/chart.png"
+          <Image source={require('../assets/chart.png')}
             style={[
               styles.spike,
               { left: spike.position.x, top: spike.position.y },

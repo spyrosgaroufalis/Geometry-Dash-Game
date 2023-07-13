@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Dimensions, View, StyleSheet, Vibration, Image } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-const spikeSpeed = 2;
+const spikeSpeed = 4;
 const spikeResetDelay = 2000;
 
 export default class Spike extends Component {
@@ -30,6 +30,7 @@ export default class Spike extends Component {
 
   componentWillUnmount() {
     this.stopAnimation();
+    clearTimeout(this.animationTimer);
   }
 
   startAnimation = () => {
@@ -78,7 +79,9 @@ export default class Spike extends Component {
       player.position.x + player.width >= spike.position.x &&
       player.position.x <= spike.position.x + spike.width &&
       player.position.x + player.width >= spike.position.x &&
-      player.position.x <= spike.position.x + spike.width
+      player.position.x <= spike.position.x + spike.width &&
+      player.position.y <= spike.position.y + spike.height / 2
+      
     ) {
       if (!isCollision) {
         this.setState({ isCollision: true });
@@ -123,11 +126,12 @@ export default class Spike extends Component {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
+   
   },
   spike: {
     position: 'absolute',
     backgroundColor: 'white',
-    width: 100,
-    height: 100,
+    width: 30,
+    height: 30,
   },
 });

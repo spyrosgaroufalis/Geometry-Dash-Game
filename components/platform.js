@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Dimensions, View, StyleSheet, Vibration } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-const platformSpeed = 2;
+const platformSpeed = 4;
 const platformResetDelay = 2000;
 
 export default class Platform extends Component {
@@ -30,6 +30,7 @@ export default class Platform extends Component {
 
   componentWillUnmount() {
     this.stopAnimation();
+    clearTimeout(this.animationTimer);
   }
 
   startAnimation = () => {

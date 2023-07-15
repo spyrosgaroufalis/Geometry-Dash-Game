@@ -54,9 +54,11 @@ export default class Spike extends Component {
     const { isCollision } = this.state;
   
     if (isCollision) {
+      this.setState({ isCollision: true });
+      this.props.stopAnimations();
       Vibration.vibrate();
-      return;
     }
+
   
     if (!this.animationStarted) {
       const { startTime } = spike;

@@ -6,14 +6,17 @@ const platformSpeed = 4;
 const platformResetDelay = 2000;
 
 export default class Platform extends Component {
-  constructor(props) {
+  
+  constructor(props) { //taking the properties
     super(props);
 
     this.state = {
       isCollision: false,
       isAnimationStarted: false,
+      
     };
   }
+  
 
 
   
@@ -53,11 +56,14 @@ export default class Platform extends Component {
     const { platform, player } = this.props;
     const { isCollision } = this.state;
   
+
     if (isCollision) {
+      this.setState({ isCollision: true });
+      this.props.stopAnimations();
       Vibration.vibrate();
-      return;
     }
-  
+
+    
     if (!this.animationStarted) {
       const { startTime } = platform;
       const currentTime = new Date().getTime();
@@ -82,7 +88,7 @@ export default class Platform extends Component {
       player.position.x <= platform.position.x + platform.width
     ) {
       if (!isCollision) {
-        this.setState({ isCollision: true });
+        this.setState({ isCollision: true});
       }
     } else {
       this.setState({ isCollision: false });

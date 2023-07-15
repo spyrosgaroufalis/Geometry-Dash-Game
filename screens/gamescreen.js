@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, View , Alert} from 'react-native';
 import Player from '../components/player';
 import backG from '../assets/618cff3e20616-large.jpg';
 import Platform from '../components/platform';
@@ -8,7 +8,7 @@ import Spike from '../components/spikes';
 const { width, height } = Dimensions.get('window');
 const gravity = 1.5;
 
-export default function gamescreen() {
+export default function GameScreen() {
   const [player] = useState({
     position: { x: 100, y: 100 },
     velocity: { x: 0, y: 0 },
@@ -21,34 +21,50 @@ export default function gamescreen() {
       position: { x: width - width / 2, y: height - 20 },
       width: width / 2,
       height: 20,
-    //  startTime: 0, // Change appearanceTime to startTime
+      startTime: 0,
     },
-    // Add more platforms with different widths, heights, and start times as needed
     {
-      position: { x: width , y: height - 50 },
+      position: { x: width, y: height - 50 },
       width: width / 3,
       height: 20,
-    //  startTime: 5000, // Change appearanceTime to startTime
+      startTime: 5000,
     },
-    
   ]);
 
-  const [spikes, setspikes] = useState([
+  const [spikes, setSpikes] = useState([
     {
       position: { x: width - width / 3, y: height - 50 },
       width: 100,
       height: 100,
-    //  startTime: 0, // Change appearanceTime to startTime
+      startTime: 0,
     },
-    // Add more spikes with different widths, heights, and start times as needed
     {
-      position: { x: width + width / 2  , y: height - 25 },
+      position: { x: width + width / 2, y: height - 25 },
       width: 10,
       height: 10,
-    //  startTime: 5000, // Change appearanceTime to startTime
+      startTime: 5000,
     },
-    
   ]);
+
+  useEffect(() => {
+    const collisionDetected = platforms.some(platform => {
+      return (
+        player.position.y + player.height >= platform.position.y &&
+        player.position.y <= platform.position.y + platform.height &&
+        player.position.x + player.width >= platform.position.x &&
+        player.position.x <= platform.position.x + platform.width
+      );
+    });
+
+    if (collisionDetected) {
+      stopAnimations();
+    }
+  }, [player, platforms]);
+
+  const stopAnimations = () => {
+    setPlatforms([]);
+    setSpikes([]);
+  };
   
 
   return (
@@ -56,16 +72,11 @@ export default function gamescreen() {
       <ImageBackground source={backG} style={styles.backgroundImage}>
         <Player player={player} platforms={platforms} />
         {platforms.map((platform, index) => (
-          <Platform key={index} player={player} platform={platform} />
-          
-
-          
+          <Platform key={index} player={player} platform={platform} stopAnimations={stopAnimations} />
         ))}
         {spikes.map((spike, index) => (
-          <Spike key={index} player={player} spike={spike} />
+          <Spike key={index} player={player} spike={spike} stopAnimations={stopAnimations} />
         ))}
-          
-        
       </ImageBackground>
       <Image source={backG} style={styles.backG} />
     </View>
@@ -87,13 +98,8 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
   },
- /* platform: {
-    position: 'absolute',
-    width: '5%',
-    height: '5%',
-  },
-  */
 });
+
 
 //MULTIPLE JUMPS 
   /*

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { View, Dimensions, StyleSheet, TouchableOpacity, Animated, ImageBackground, Vibration } from 'react-native';
+import { View, Dimensions, StyleSheet, TouchableOpacity, Animated, ImageBackground, Vibration , Image} from 'react-native';
+import icon from "../assets/png-clipart-geometry-dash-alien-isolation-computer-icons-game-dash-miscellaneous-video-game.png"
+
+
 
 const { width, height } = Dimensions.get('window');
 const gravity = 1.5;
@@ -12,6 +15,7 @@ export default class Player extends Component {
       isJumping: false,
       isCollision: false,
       canJump: true,
+      rotationValue: new Animated.Value(0),
     };
 
     this.animation = new Animated.Value(0);
@@ -84,6 +88,7 @@ export default class Player extends Component {
     const { player, platforms } = this.props;
     const { velocity } = player;
     const { canJump } = this.state;
+    
 
     if (
       (player.position.y >= height - player.height) ||
@@ -98,6 +103,13 @@ export default class Player extends Component {
       if (canJump) {
         velocity.y = -20;
         this.setState({ player: { ...player, velocity }, canJump: false });
+        Animated.timing(this.state.rotationValue, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }).start(() => {
+          this.state.rotationValue.setValue(0);
+        });
       }
     }
   };
@@ -106,8 +118,18 @@ export default class Player extends Component {
     const { player } = this.props;
     const { isCollision } = this.state;
     const animatedStyle = {
-      transform: [{ translateY: this.animation }],
+      transform: [
+       
+        
+        {
+          rotate: this.state.rotationValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '90deg'],
+          }),
+        },
+      ],
     };
+
 
     return (
       <TouchableOpacity
@@ -116,7 +138,8 @@ export default class Player extends Component {
         onPressOut={this.handleTouchEnd}
         activeOpacity={1}
       >
-        <Animated.View
+        <Animated.View 
+       // source={icon}  // needs Animated.Image
           style={[
             styles.player,
             animatedStyle,
@@ -124,7 +147,15 @@ export default class Player extends Component {
             { width: player.width, height: player.height },
             isCollision && styles.collisionPlayer,
           ]}
-        />
+        >
+          <View style={styles.eyesContainer}>
+          <View style={styles.eye} />
+          <View style={styles.eye} />
+        </View>
+        <View style={styles.mouthContainer}>
+        <View style={styles.mouth} />
+        </View>
+      </Animated.View>
       </TouchableOpacity>
     );
   }
@@ -136,9 +167,33 @@ const styles = StyleSheet.create({
   },
   player: {
     position: 'absolute',
-    backgroundColor: 'red',
+    backgroundColor: '#e0ba3a',
   },
   collisionPlayer: {
     backgroundColor: 'gray',
   },
+  eyesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 5,
+    padding: 5,
+  },
+  eye: {
+    width: 7,
+    height: 7,
+    backgroundColor: 'white',
+   // borderRadius: 5,
+  },
+  mouth: {
+    width: 20,
+    height: 5,
+    backgroundColor: 'white',
+   // marginTop: 10,
+  },
+  mouthContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    //marginTop: 5,
+    padding: 5,
+  }
 });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, ImageBackground, StyleSheet, Text, View , Alert} from 'react-native';
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, View , Alert, Vibration} from 'react-native';
 import Player from '../components/player';
 import backG from '../assets/618cff3e20616-large.jpg';
 import Platform from '../components/platform';
@@ -46,24 +46,12 @@ export default function GameScreen() {
     },
   ]);
 
-  useEffect(() => {
-    const collisionDetected = platforms.some(platform => {
-      return (
-        player.position.y + player.height >= platform.position.y &&
-        player.position.y <= platform.position.y + platform.height &&
-        player.position.x + player.width >= platform.position.x &&
-        player.position.x <= platform.position.x + platform.width
-      );
-    });
-
-    if (collisionDetected) {
-      stopAnimations();
-    }
-  }, [player, platforms]);
+  
 
   const stopAnimations = () => {
     setPlatforms([]);
     setSpikes([]);
+    Vibration.vibrate();
   };
   
 
@@ -100,14 +88,3 @@ const styles = StyleSheet.create({
   },
 });
 
-
-//MULTIPLE JUMPS 
-  /*
-  jump = () => {
-  const { player } = this.state;
-  const { velocity } = player;
-
-  velocity.y = -20;
-  this.setState({ player: { ...player, velocity } });
-};
-*/

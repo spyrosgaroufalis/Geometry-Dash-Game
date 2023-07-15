@@ -3,7 +3,7 @@ import { Dimensions, View, StyleSheet, Vibration } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 const platformSpeed = 4;
-const platformResetDelay = 2000;
+//const platformResetDelay = 2000;     // This is for the loop
 
 export default class Platform extends Component {
   
@@ -60,7 +60,7 @@ export default class Platform extends Component {
     if (isCollision) {
       this.setState({ isCollision: true });
       this.props.stopAnimations();
-      Vibration.vibrate();
+     
     }
 
     
@@ -94,16 +94,18 @@ export default class Platform extends Component {
       this.setState({ isCollision: false });
     }
   
-    // Check if the platform has gone beyond the left side of the screen
-    if (platform.position.x + platform.width < 0) {
+    // Check if the platform has gone beyond the left side of the screen  //This is for the loop 
+  /*  if (platform.position.x + platform.width < 0) {
       setTimeout(() => {
         platform.position.x = width + 50;
         this.animationStarted = false; // Reset animation started flag
       }, platformResetDelay);
     }
+    */
   
     requestAnimationFrame(this.animate);
   };
+  
   
 
   render() {

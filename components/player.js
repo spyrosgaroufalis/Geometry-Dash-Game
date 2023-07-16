@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Dimensions, StyleSheet, TouchableOpacity, Animated, ImageBackground, Vibration , Image} from 'react-native';
-import icon from "../assets/png-clipart-geometry-dash-alien-isolation-computer-icons-game-dash-miscellaneous-video-game.png"
 
 
 
@@ -16,6 +15,8 @@ export default class Player extends Component {
       isCollision: false,
       canJump: true,
       rotationValue: new Animated.Value(0),
+      
+      rotationOffset: 0, // New state to track the rotation offset
     };
 
     this.animation = new Animated.Value(0);
@@ -108,7 +109,11 @@ export default class Player extends Component {
           duration: 500,
           useNativeDriver: true,
         }).start(() => {
-          this.state.rotationValue.setValue(0);
+          const rotationOffset = this.state.rotationOffset + 90; // Increase the rotation offset
+          this.setState({ rotationOffset }, () => {
+            // Reset the rotation value after landing animation finishes
+            this.state.rotationValue.setValue(0);
+          });
         });
       }
     }
@@ -116,20 +121,17 @@ export default class Player extends Component {
 
   render() {
     const { player } = this.props;
-    const { isCollision } = this.state;
+    const { isCollision, rotationOffset } = this.state;
     const animatedStyle = {
       transform: [
-       
-        
         {
           rotate: this.state.rotationValue.interpolate({
             inputRange: [0, 1],
-            outputRange: ['0deg', '90deg'],
+            outputRange: [`${rotationOffset}deg`, `${rotationOffset + 90}deg`],
           }),
         },
       ],
     };
-
 
     return (
       <TouchableOpacity
@@ -138,8 +140,7 @@ export default class Player extends Component {
         onPressOut={this.handleTouchEnd}
         activeOpacity={1}
       >
-        <Animated.View 
-       // source={icon}  // needs Animated.Image
+        <Animated.View
           style={[
             styles.player,
             animatedStyle,
@@ -149,13 +150,13 @@ export default class Player extends Component {
           ]}
         >
           <View style={styles.eyesContainer}>
-          <View style={styles.eye} />
-          <View style={styles.eye} />
-        </View>
-        <View style={styles.mouthContainer}>
-        <View style={styles.mouth} />
-        </View>
-      </Animated.View>
+            <View style={styles.eye} />
+            <View style={styles.eye} />
+          </View>
+          <View style={styles.mouthContainer}>
+            <View style={styles.mouth} />
+          </View>
+        </Animated.View>
       </TouchableOpacity>
     );
   }
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 5,
-    padding: 5,
+    padding: 4,
   },
   eye: {
     width: 7,
@@ -189,11 +190,13 @@ const styles = StyleSheet.create({
     height: 5,
     backgroundColor: 'white',
    // marginTop: 10,
+  // marginBottom: 5,
   },
   mouthContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     //marginTop: 5,
     padding: 5,
+    paddingBottom: 7,
   }
 });

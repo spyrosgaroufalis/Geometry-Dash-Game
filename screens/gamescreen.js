@@ -4,11 +4,13 @@ import Player from '../components/player';
 import backG from '../assets/618cff3e20616-large.jpg';
 import Platform from '../components/platform';
 import Spike from '../components/spikes';
+import Portal from '../components/portal'; 
 
 const { width, height } = Dimensions.get('window');
 const gravity = 1.5;
 
 export default function GameScreen() {
+  const ONE_SECOND_IN_MS = 1000;
   const [player] = useState({
     position: { x: 100, y: 100 },
     velocity: { x: 0, y: 0 },
@@ -19,7 +21,7 @@ export default function GameScreen() {
   const [platforms, setPlatforms] = useState([
     {
       position: { x: width - width / 2, y: height - 20 },
-      width: width / 2,
+      width: width / 5,
       height: 20,
       startTime: 0,
     },
@@ -29,13 +31,14 @@ export default function GameScreen() {
       height: 20,
       startTime: 5000,
     },
+   
   ]);
 
   const [spikes, setSpikes] = useState([
     {
-      position: { x: width - width / 3, y: height - 50 },
-      width: 100,
-      height: 100,
+      position: { x: width - width / 4, y: height - 25 },
+      width: 10,
+      height: 10,
       startTime: 0,
     },
     {
@@ -44,6 +47,17 @@ export default function GameScreen() {
       height: 10,
       startTime: 5000,
     },
+    
+  ]);
+  const [portal, setPortal] = useState([
+    
+    {
+      position: { x: width, y: height - 100 },
+      width: width / 3,
+      height: 20, //i think from the portal.js is more important
+      startTime: 5000,
+    },
+   
   ]);
 
   
@@ -51,7 +65,8 @@ export default function GameScreen() {
   const stopAnimations = () => {
     setPlatforms([]);
     setSpikes([]);
-    Vibration.vibrate();
+
+    Vibration.vibrate(ONE_SECOND_IN_MS);
   };
   
 
@@ -64,6 +79,9 @@ export default function GameScreen() {
         ))}
         {spikes.map((spike, index) => (
           <Spike key={index} player={player} spike={spike} stopAnimations={stopAnimations} />
+        ))}
+        {portal.map((portal, index) => (
+        <Portal key={index} player={player} portal={portal} stopAnimations={stopAnimations}/>
         ))}
       </ImageBackground>
       <Image source={backG} style={styles.backG} />

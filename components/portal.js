@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Dimensions, View, StyleSheet, Vibration, Image } from 'react-native';
+import port from '../assets/portal.png'
 
 const { width, height } = Dimensions.get('window');
-const spikeSpeed = 4;
-//const spikeResetDelay = 2000; // for the loop
+const portalSpeed = 4;
 
-export default class Spike extends Component {
+
+export default class portal extends Component {
   constructor(props) {
     super(props);
 
@@ -18,8 +19,9 @@ export default class Spike extends Component {
 
   
   componentDidMount() {
-    const { spike } = this.props;
-    const { startTime } = spike;
+     this.animationStarted = false; // Initialize the flag
+    const { portal } = this.props;
+    const { startTime } = portal;
     const delay = startTime - Date.now(); // Calculate the delay based on the start time
   
     this.animationTimer = setTimeout(() => {
@@ -35,14 +37,14 @@ export default class Spike extends Component {
 
   startAnimation = () => {
     if (this.state.isAnimationStarted) return;
-
-    const { spike } = this.props;
-    const { appearanceTime } = spike;
-
+  
+    const { portal } = this.props;
+    const { startTime } = portal; // Replace appearanceTime with startTime
+  
     this.animationTimer = setTimeout(() => {
       this.setState({ isAnimationStarted: true });
       this.animate();
-    }, appearanceTime);
+    }, startTime); // Use startTime instead of appearanceTime
   };
 
   stopAnimation = () => {
@@ -50,18 +52,20 @@ export default class Spike extends Component {
   };
 
   animate = () => {
-    const { spike, player } = this.props;
+    const { portal, player } = this.props;
     const { isCollision } = this.state;
   
     if (isCollision) {
       this.setState({ isCollision: true });
-      this.props.stopAnimations();
+
+
+     // this.props.stopAnimations();
      // Vibration.vibrate();
     }
 
   
     if (!this.animationStarted) {
-      const { startTime } = spike;
+      const { startTime } = portal;
       const currentTime = new Date().getTime();
       if (currentTime < startTime) {
         requestAnimationFrame(this.animate);
@@ -70,19 +74,19 @@ export default class Spike extends Component {
       this.animationStarted = true;
     }
   
-    spike.position.x -= spikeSpeed;
+    portal.position.x -= portalSpeed;
   
-    this.setState({ spike });
+    this.setState({ portal });
   
     // Collision detection with the player
     if (
-      player.position.y + player.height >= spike.position.y &&
-      player.position.y <= spike.position.y + spike.height &&
-      player.position.x + player.width >= spike.position.x &&
-      player.position.x <= spike.position.x + spike.width &&
-      player.position.x + player.width >= spike.position.x &&
-      player.position.x <= spike.position.x + spike.width &&
-      player.position.y <= spike.position.y + spike.height / 2
+      player.position.y + player.height >= portal.position.y &&
+      player.position.y <= portal.position.y + portal.height &&
+      player.position.x + player.width >= portal.position.x &&
+      player.position.x <= portal.position.x + portal.width &&
+      player.position.x + player.width >= portal.position.x &&
+      player.position.x <= portal.position.x + portal.width &&
+      player.position.y <= portal.position.y + portal.height / 2
       
     ) {
       if (!isCollision) {
@@ -92,31 +96,24 @@ export default class Spike extends Component {
       this.setState({ isCollision: false });
     }
   
-/*    // Check if the spike has gone beyond the left side of the screen // this is for the loop
-    if (spike.position.x + spike.width < 0) {
-      setTimeout(() => {
-        spike.position.x = width + 50;
-        this.animationStarted = false; // Reset animation started flag
-      }, spikeResetDelay);
-    }
-    */
+
   
     requestAnimationFrame(this.animate);
   };
   
 
   render() {
-    const { spike } = this.props;
+    const { portal } = this.props;
     const { isAnimationStarted } = this.state;
 
     return (
       <View style={styles.container}>
         {isAnimationStarted && (
             
-          <Image source={require('../assets/chart.png')}
+          <Image source={port}
             style={[
-              styles.spike,
-              { left: spike.position.x, top: spike.position.y },
+              styles.portal,
+              { left: portal.position.x, top: portal.position.y },
               
             ]}
           />
@@ -131,10 +128,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
    
   },
-  spike: {
+  portal: {
     position: 'absolute',
     backgroundColor: 'transparent',
-    width: 30,
-    height: 30,
+    width: 100,
+    height: 100,
   },
 });

@@ -9,28 +9,17 @@ const Stack = createStackNavigator();
 
 const Homescreen = ({ navigation }) => {
  
-
-  
-
   const handleAye = () => {
     // authenticate user and navigate to Root screen if successful
-   
       // add authentication logic here
       if (navigation) {
         navigation.navigate('gamescreen');
       }
-   
-
-  
-   
   };
 
   const handleOptions = () => {
     //option list
   }
-
-
-  
 
   return (
     <ImageBackground source={backG} style={styles.backgroundImage}>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Dimensions, StyleSheet, TouchableOpacity, Animated, ImageBackground, Vibration , Image} from 'react-native';
-
+import rocketImage from '../assets/rocket.png';
 
 
 const { width, height } = Dimensions.get('window');
@@ -15,7 +15,7 @@ export default class Player extends Component {
       isCollision: false,
       canJump: true,
       rotationValue: new Animated.Value(0),
-      
+      isRocket: false, // New state to track the appearance of the rocket
       rotationOffset: 0, // New state to track the rotation offset
     };
 
@@ -33,6 +33,13 @@ export default class Player extends Component {
     const { velocity } = player;
 
     player.position.y += velocity.y;
+
+
+
+    if (isCollision && !this.state.isRocket) {
+      this.setState({ isRocket: true }); // Set isRocket to true on collision
+    }
+
 
     if (player.position.y + player.height + velocity.y <= height) {
       velocity.y += gravity;
@@ -85,23 +92,26 @@ export default class Player extends Component {
     this.setState({ isJumping: false });
   };
 
-  jump = () => {
-    const { player, platforms } = this.props;
-    const { velocity } = player;
-    const { canJump } = this.state;
-    
+ jump = () => {
+  const { player, platforms } = this.props;
+  const { velocity } = player;
+  const { canJump, isRocket } = this.state;
 
-    if (
-      (player.position.y >= height - player.height) ||
-      !platforms.some((platform) => {
-        return (
-          player.position.y + player.height >= platform.position.y &&
-          player.position.x + player.width >= platform.position.x &&
-          player.position.x <= platform.position.x + platform.width
-        );
-      })
-    ) {
-      if (canJump) {
+  if (
+    (player.position.y >= height - player.height) ||
+    !platforms.some((platform) => {
+      return (
+        player.position.y + player.height >= platform.position.y &&
+        player.position.x + player.width >= platform.position.x &&
+        player.position.x <= platform.position.x + platform.width
+      );
+    })
+  ) {
+    if (canJump) {
+      if (isRocket) {
+        velocity.y = -20; // Increase the jump height for rocket mode
+        this.setState({ player: { ...player, velocity }, canJump: true }); // Allow multiple jumps in rocket mode
+      } else {
         velocity.y = -20;
         this.setState({ player: { ...player, velocity }, canJump: false });
         Animated.timing(this.state.rotationValue, {
@@ -109,59 +119,65 @@ export default class Player extends Component {
           duration: 500,
           useNativeDriver: true,
         }).start(() => {
-          const rotationOffset = this.state.rotationOffset + 90; // Increase the rotation offset
+          const rotationOffset = this.state.rotationOffset + 90;
           this.setState({ rotationOffset }, () => {
-            // Reset the rotation value after landing animation finishes
             this.state.rotationValue.setValue(0);
           });
         });
       }
     }
+  }
+};
+
+render() {
+  const { player } = this.props;
+  const { isCollision, rotationOffset, isRocket } = this.state;
+  const animatedStyle = {
+    transform: [
+      {
+        rotate: this.state.rotationValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [`${isRocket ? 0 : rotationOffset}deg`, `${isRocket ? 0 : rotationOffset + 90}deg`],
+        }),
+      },
+    ],
   };
 
-  render() {
-    const { player } = this.props;
-    const { isCollision, rotationOffset } = this.state;
-    const animatedStyle = {
-      transform: [
-        {
-          rotate: this.state.rotationValue.interpolate({
-            inputRange: [0, 1],
-            outputRange: [`${rotationOffset}deg`, `${rotationOffset + 90}deg`],
-          }),
-        },
-      ],
-    };
-
-    return (
-      <TouchableOpacity
-        style={styles.canvas}
-        onPressIn={this.handleTouchStart}
-        onPressOut={this.handleTouchEnd}
-        activeOpacity={1}
+  return (
+    <TouchableOpacity
+      style={styles.canvas}
+      onPressIn={this.handleTouchStart}
+      onPressOut={this.handleTouchEnd}
+      activeOpacity={1}
+    >
+      <Animated.View
+        style={[
+          styles.player,
+          animatedStyle,
+          { left: player.position.x, top: player.position.y },
+          { width: player.width, height: player.height },
+          isCollision && !isRocket && styles.collisionPlayer,
+          isRocket && { backgroundColor: 'transparent' },
+        ]}
       >
-        <Animated.View
-          style={[
-            styles.player,
-            animatedStyle,
-            { left: player.position.x, top: player.position.y },
-            { width: player.width, height: player.height },
-            isCollision && styles.collisionPlayer,
-          ]}
-        >
-          <View style={styles.eyesContainer}>
-            <View style={styles.eye} />
-            <View style={styles.eye} />
+        {isRocket ? (
+          <Image source={rocketImage} style={styles.rocketImage} />
+        ) : (
+          <View style={styles.cube}>
+            <View style={styles.eyesContainer}>
+              <View style={styles.eye} />
+              <View style={styles.eye} />
+            </View>
+            <View style={styles.mouthContainer}>
+              <View style={styles.mouth} />
+            </View>
           </View>
-          <View style={styles.mouthContainer}>
-            <View style={styles.mouth} />
-          </View>
-        </Animated.View>
-      </TouchableOpacity>
-    );
-  }
-}
-
+        )}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+};
 const styles = StyleSheet.create({
   canvas: {
     flex: 1,
@@ -198,5 +214,11 @@ const styles = StyleSheet.create({
     //marginTop: 5,
     padding: 5,
     paddingBottom: 7,
-  }
+  },
+  rocketImage: {
+    width: '150%',
+    height: '150%',
+    rotate: '47deg',
+  },
+  
 });

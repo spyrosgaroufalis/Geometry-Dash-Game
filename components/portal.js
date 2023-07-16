@@ -22,13 +22,14 @@ export default class portal extends Component {
      this.animationStarted = false; // Initialize the flag
     const { portal } = this.props;
     const { startTime } = portal;
-    const delay = startTime - Date.now(); // Calculate the delay based on the start time
+    const delay = -1000 // Calculate the delay based on the start time
   
     this.animationTimer = setTimeout(() => {
       this.setState({ isAnimationStarted: true });
       this.animate();
-    }, delay > 0 ? delay : 0); // Set a minimum delay of 0 if the calculated delay is negative
+    }, delay > 0 ? delay : 10000);   // Set a minimum delay of 0 if the calculated delay is negative
   }
+  
 
   componentWillUnmount() {
     this.stopAnimation();

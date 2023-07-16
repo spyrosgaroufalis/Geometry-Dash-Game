@@ -54,7 +54,7 @@ export default function GameScreen() {
     {
       position: { x: width, y: height - 100 },
       width: width / 3,
-      height: 20, //i think from the portal.js is more important
+    //  height: 20, //i think from the portal.js is more important
       startTime: 5000,
     },
    

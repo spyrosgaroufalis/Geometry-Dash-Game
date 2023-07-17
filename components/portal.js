@@ -6,30 +6,28 @@ const { width, height } = Dimensions.get('window');
 const portalSpeed = 4;
 
 
-export default class portal extends Component {
+export default class Portal extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isCollision: false,
+      isPortalCollision: false,
       isAnimationStarted: false,
+      isCollision: false,
     };
   }
 
-
-  
   componentDidMount() {
-     this.animationStarted = false; // Initialize the flag
+    this.animationStarted = false; // Initialize the flag
     const { portal } = this.props;
     const { startTime } = portal;
-    const delay = -1000 // Calculate the delay based on the start time
-  
+    const delay = -1000; // Calculate the delay based on the start time
+
     this.animationTimer = setTimeout(() => {
       this.setState({ isAnimationStarted: true });
       this.animate();
-    }, delay > 0 ? delay : 10000);   // Set a minimum delay of 0 if the calculated delay is negative
+    }, delay > 0 ? delay : 10000); // Set a minimum delay of 0 if the calculated delay is negative
   }
-  
 
   componentWillUnmount() {
     this.stopAnimation();
@@ -38,10 +36,10 @@ export default class portal extends Component {
 
   startAnimation = () => {
     if (this.state.isAnimationStarted) return;
-  
+
     const { portal } = this.props;
     const { startTime } = portal; // Replace appearanceTime with startTime
-  
+
     this.animationTimer = setTimeout(() => {
       this.setState({ isAnimationStarted: true });
       this.animate();
@@ -53,18 +51,39 @@ export default class portal extends Component {
   };
 
   animate = () => {
-    const { portal, player } = this.props;
-    const { isCollision } = this.state;
-  
-    if (isCollision) {
-      this.setState({ isCollision: true });
+    const { portal, player, platforms, spikes } = this.props;
+    const { isPortalCollision } = this.state;
 
-
-     // this.props.stopAnimations();
-     // Vibration.vibrate();
+    if (isPortalCollision) {
+      this.setState({ isPortalCollision: true });
     }
 
-  
+    // Check for collision with platforms
+    platforms.forEach((platform) => {
+      if (
+        player.position.y + player.height >= platform.position.y &&
+        player.position.y <= platform.position.y + platform.height &&
+        player.position.x + player.width >= platform.position.x &&
+        player.position.x <= platform.position.x + platform.width
+      ) {
+        this.setState({ isCollision: true });
+        this.props.stopAnimations();
+      }
+    });
+
+    // Check for collision with spikes
+    spikes.forEach((spike) => {
+      if (
+        player.position.y + player.height >= spike.position.y &&
+        player.position.y <= spike.position.y + spike.height &&
+        player.position.x + player.width >= spike.position.x &&
+        player.position.x <= spike.position.x + spike.width
+      ) {
+        this.setState({ isCollision: true });
+        this.props.stopAnimations();
+      }
+    });
+
     if (!this.animationStarted) {
       const { startTime } = portal;
       const currentTime = new Date().getTime();
@@ -74,11 +93,11 @@ export default class portal extends Component {
       }
       this.animationStarted = true;
     }
-  
+
     portal.position.x -= portalSpeed;
-  
+
     this.setState({ portal });
-  
+
     // Collision detection with the player
     if (
       player.position.y + player.height >= portal.position.y &&
@@ -88,20 +107,16 @@ export default class portal extends Component {
       player.position.x + player.width >= portal.position.x &&
       player.position.x <= portal.position.x + portal.width &&
       player.position.y <= portal.position.y + portal.height / 2
-      
     ) {
-      if (!isCollision) {
-        this.setState({ isCollision: true });
+      if (!isPortalCollision) {
+        this.setState({ isPortalCollision: true });
       }
     } else {
-      this.setState({ isCollision: false });
+      this.setState({ isPortalCollision: false });
     }
-  
 
-  
     requestAnimationFrame(this.animate);
   };
-  
 
   render() {
     const { portal } = this.props;
@@ -110,18 +125,18 @@ export default class portal extends Component {
     return (
       <View style={styles.container}>
         {isAnimationStarted && (
-            
-          <Image source={port}
+          <Image
+            source={port}
             style={[
               styles.portal,
               { left: portal.position.x, top: portal.position.y },
-              
             ]}
           />
         )}
       </View>
     );
   }
+
 }
 
 const styles = StyleSheet.create({

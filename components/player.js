@@ -13,6 +13,7 @@ export default class Player extends Component {
     this.state = {
       isJumping: false,
       isCollision: false,
+      isPortalCollision: false,
       canJump: true,
       rotationValue: new Animated.Value(0),
       isRocket: false, // New state to track the appearance of the rocket
@@ -27,6 +28,9 @@ export default class Player extends Component {
   }
 
   animate = () => {
+    const { portal } = this.props;
+    const {isPortalCollision } = this.state; 
+
     const { platforms } = this.props;
     const { player } = this.props;
     const { isJumping, isCollision } = this.state;
@@ -35,8 +39,22 @@ export default class Player extends Component {
     player.position.y += velocity.y;
 
 
+     // Collision detection with the portal
+  if (
+    player.position.y + player.height >= portal.position.y &&
+    player.position.y <= portal.position.y + portal.height &&
+    player.position.x + player.width >= portal.position.x &&
+    player.position.x <= portal.position.x + portal.width
+  ) {
+    if (!isPortalCollision) {
+      this.setState({ isPortalCollision: true });
+    }
+  } else {
+    this.setState({ isPortalCollision: false });
+  }
+  
 
-    if (isCollision && !this.state.isRocket) {
+    if (isPortalCollision && !this.state.isRocket) {
       this.setState({ isRocket: true }); // Set isRocket to true on collision
     }
 
@@ -93,8 +111,9 @@ export default class Player extends Component {
   };
 
  jump = () => {
-  const { player, platforms } = this.props;
+  const { player, platforms , portal} = this.props;
   const { velocity } = player;
+  const {isPortalCollision} = this.state;
   const { canJump, isRocket } = this.state;
 
   if (

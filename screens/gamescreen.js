@@ -51,7 +51,7 @@ export default function GameScreen() {
   ]);
 
   //not array
-  const [portal, setPortal] = useState(
+  const [portal, setPortal] = useState([
     
     {
       position: { x: width, y: height - 100 },
@@ -61,7 +61,7 @@ export default function GameScreen() {
     //  height: 20, //i think from the portal.js is more important
       startTime: 5000,
     },
-  
+  ]
   );
 
   
@@ -69,7 +69,7 @@ export default function GameScreen() {
   const stopAnimations = () => {
     setPlatforms([]);
     setSpikes([]);
-    setPortal({});
+    setPortal([]);
 
     Vibration.vibrate(ONE_SECOND_IN_MS);
   };
@@ -86,9 +86,9 @@ export default function GameScreen() {
           <Spike key={index} player={player} spike={spike} stopAnimations={stopAnimations} />
         ))}
         
-       
-  <Portal  player={player} portal={portal} stopAnimations={stopAnimations}/>
-
+        {portal.map((portal, index) => (
+  <Portal key={index} player={player} portal={portal} platforms={platforms} spikes={spikes} stopAnimations={stopAnimations}/>
+        ))}
       
       </ImageBackground>
       <Image source={backG} style={styles.backG} />
@@ -112,4 +112,3 @@ const styles = StyleSheet.create({
     height: height,
   },
 });
-

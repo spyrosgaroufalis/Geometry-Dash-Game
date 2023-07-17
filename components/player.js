@@ -40,6 +40,7 @@ export default class Player extends Component {
 
 
      // Collision detection with the portal
+     platforms.forEach((portal) => {
   if (
     player.position.y + player.height >= portal.position.y &&
     player.position.y <= portal.position.y + portal.height &&
@@ -52,6 +53,7 @@ export default class Player extends Component {
   } else {
     this.setState({ isPortalCollision: false });
   }
+});
   
 
     if (isPortalCollision && !this.state.isRocket) {

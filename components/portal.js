@@ -11,16 +11,16 @@ export default class Portal extends Component {
     super(props);
 
     this.state = {
-      isPortalCollision: false,
+      
       isAnimationStarted: false,
       isCollision: false,
     };
   }
 
   componentDidMount() {
-    this.animationStarted = false; // Initialize the flag
-    const { portal } = this.props;
-    const { startTime } = portal;
+   // this.animationStarted = false; // Initialize the flag
+   // const { portal } = this.props;
+    //const { startTime } = portal;
     const delay = -1000; // Calculate the delay based on the start time
 
     this.animationTimer = setTimeout(() => {
@@ -53,6 +53,9 @@ export default class Portal extends Component {
   animate = () => {
     const { portal, player, platforms, spikes } = this.props;
     const { isPortalCollision } = this.state;
+    const { isCollision } = this.state;
+
+   
 
     if (isPortalCollision) {
       this.setState({ isPortalCollision: true });
@@ -98,22 +101,7 @@ export default class Portal extends Component {
 
     this.setState({ portal });
 
-    // Collision detection with the player
-    if (
-      player.position.y + player.height >= portal.position.y &&
-      player.position.y <= portal.position.y + portal.height &&
-      player.position.x + player.width >= portal.position.x &&
-      player.position.x <= portal.position.x + portal.width &&
-      player.position.x + player.width >= portal.position.x &&
-      player.position.x <= portal.position.x + portal.width &&
-      player.position.y <= portal.position.y + portal.height / 2
-    ) {
-      if (!isPortalCollision) {
-        this.setState({ isPortalCollision: true });
-      }
-    } else {
-      this.setState({ isPortalCollision: false });
-    }
+    
 
     requestAnimationFrame(this.animate);
   };
@@ -130,6 +118,7 @@ export default class Portal extends Component {
             style={[
               styles.portal,
               { left: portal.position.x, top: portal.position.y },
+           
             ]}
           />
         )}

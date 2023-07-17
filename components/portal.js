@@ -21,7 +21,7 @@ export default class Portal extends Component {
    // this.animationStarted = false; // Initialize the flag
    // const { portal } = this.props;
     //const { startTime } = portal;
-    const delay = -1000; // Calculate the delay based on the start time
+    const delay = -10 // Calculate the delay based on the start time
 
     this.animationTimer = setTimeout(() => {
       this.setState({ isAnimationStarted: true });

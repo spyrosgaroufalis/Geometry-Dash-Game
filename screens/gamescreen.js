@@ -31,6 +31,12 @@ export default function GameScreen() {
       height: 20,
       startTime: 5000,
     },
+    {
+      position: { x: width, y: height - 60 },
+      width: width / 5,
+      height: 20,
+      startTime: 7000,
+    },
    
   ]);
 
@@ -45,7 +51,7 @@ export default function GameScreen() {
       position: { x: width + width / 2, y: height - 25 },
       width: 10,
       height: 10,
-      startTime: 5000,
+      startTime: 7000,
     },
     
   ]);

@@ -29,36 +29,33 @@ export default class Player extends Component {
 
   animate = () => {
     const { portal } = this.props;
-    const {isPortalCollision } = this.state; 
-
-    const { platforms } = this.props;
-    const { player } = this.props;
-    const { isJumping, isCollision } = this.state;
+    const { isPortalCollision } = this.state;
+    const { platforms, player } = this.props;
+    const { isJumping, isCollision , isRocket } = this.state;
     const { velocity } = player;
-
-    player.position.y += velocity.y;
-
-
-     // Collision detection with the portal
-     platforms.forEach((portal) => {
-  if (
-    player.position.y + player.height >= portal.position.y &&
-    player.position.y <= portal.position.y + portal.height &&
-    player.position.x + player.width >= portal.position.x &&
-    player.position.x <= portal.position.x + portal.width
-  ) {
-    if (!isPortalCollision) {
-      this.setState({ isPortalCollision: true });
-    }
-  } else {
-    this.setState({ isPortalCollision: false });
-  }
-});
   
-
-    if (isPortalCollision && !this.state.isRocket) {
-      this.setState({ isRocket: true }); // Set isRocket to true on collision
+    player.position.y += velocity.y;
+  
+    // Collision detection with the portal
+    portal.forEach((portal) => {
+      if (
+        player.position.y + player.height >= portal.position.y &&
+        player.position.y <= portal.position.y + portal.height &&
+        player.position.x + player.width >= portal.position.x &&
+        player.position.x <= portal.position.x + portal.width
+      ) {
+        if (!isPortalCollision) {
+          this.setState({ isPortalCollision: true });
+        }
+      } else {
+        this.setState({ isPortalCollision: false });
+      }
+    });
+  
+    if (isPortalCollision && !isRocket) {
+      this.setState({ isRocket: true });
     }
+  
 
 
     if (player.position.y + player.height + velocity.y <= height) {
@@ -239,7 +236,7 @@ const styles = StyleSheet.create({
   rocketImage: {
     width: '150%',
     height: '150%',
-    rotate: '47deg',
+    transform: [{ rotate: '47deg' }],
   },
   
 });

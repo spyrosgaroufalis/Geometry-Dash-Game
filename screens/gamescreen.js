@@ -5,6 +5,8 @@ import backG from '../assets/618cff3e20616-large.jpg';
 import Platform from '../components/platform';
 import Spike from '../components/spikes';
 import Portal from '../components/portal'; 
+import { useNavigation } from '@react-navigation/native';
+import HomeScreen from '../screens/homescreen'
 
 const { width, height } = Dimensions.get('window');
 const gravity = 1.5;
@@ -113,6 +115,9 @@ export default function GameScreen() {
   ]
   );
 
+  const [showMessage, setShowMessage] = useState(false); // State to control the display of the message
+  const navigation = useNavigation();
+
   
 
   const stopAnimations = () => {
@@ -121,8 +126,26 @@ export default function GameScreen() {
     setPortal([]);
 
     Vibration.vibrate(ONE_SECOND_IN_MS);
+
+    setShowMessage(true); // Set the state to display the message
   };
+
+  const handleGoBack = () => {
+    // Handle the "Go Back" button press
+  setShowMessage(false); // Hide the message
+  navigation.navigate('homescreen'); // Replace 'HomeScreen' with the actual name of your home screen route
+  // Additional logic as needed
+};
+    
+   
+    
   
+
+  const handlePlayAgain = () => {
+    // Handle the "Play Again" button press
+    setShowMessage(false); // Hide the message
+    // Additional logic as needed
+  };
 
   return (
     <View style={styles.container}>
@@ -134,11 +157,25 @@ export default function GameScreen() {
         {spikes.map((spike, index) => (
           <Spike key={index} player={player} spike={spike} stopAnimations={stopAnimations} />
         ))}
-        
         {portal.map((portal, index) => (
-  <Portal key={index} player={player} portal={portal} platforms={platforms} spikes={spikes} stopAnimations={stopAnimations}/>
+          <Portal key={index} player={player} portal={portal} platforms={platforms} spikes={spikes} stopAnimations={stopAnimations} />
         ))}
-      
+
+        {showMessage && ( // Conditionally render the message
+          <View style={styles.messageContainer}>
+            <View style={styles.blueBox}>
+              <Text style={styles.messageText}>Oops, you lost!</Text>
+              <View style={styles.buttonContainer}>
+                <Text style={styles.button} onPress={handleGoBack}>
+                  Go Back
+                </Text>
+                <Text style={styles.button} onPress={handlePlayAgain}>
+                  Play Again
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
       </ImageBackground>
       <Image source={backG} style={styles.backG} />
     </View>
@@ -159,5 +196,34 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: width,
     height: height,
+  },
+  messageContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  blueBox: {
+    backgroundColor: 'blue',
+    width: 400,
+    height: 300,
+    padding: 20,
+    borderRadius: 10,
+    justifyContent: 'space-between', // Align buttons in the vertical middle
+  },
+  messageText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Align buttons horizontally
+    marginTop: 'auto', // Push the buttons to the bottom
+  },
+  button: {
+    color: 'white',
+    fontSize: 16,
   },
 });

@@ -12,7 +12,8 @@ export default class Platform extends Component {
 
     this.state = {
       isCollision: false,
-      isAnimationStarted: false,
+  
+      isAnimationStarted: this.props.isAnimationStarted, // Set the initial state based on the prop
       
     };
   }

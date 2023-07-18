@@ -19,14 +19,14 @@ export default class Portal extends Component {
 
   componentDidMount() {
    // this.animationStarted = false; // Initialize the flag
-   // const { portal } = this.props;
-    //const { startTime } = portal;
-    const delay = -10 // Calculate the delay based on the start time
-
+    const { portal } = this.props;
+    const { startTime } = portal;
+    const delay = startTime - Date.now// Calculate the delay based on the start time
+// without - date.now the appearence seems to listen to the position writen on the gamescreen component
     this.animationTimer = setTimeout(() => {
       this.setState({ isAnimationStarted: true });
       this.animate();
-    }, delay > 0 ? delay : 10000); // Set a minimum delay of 0 if the calculated delay is negative
+    }, delay > 0 ? delay : 0); // Set a minimum delay of 0 if the calculated delay is negative
   }
 
   componentWillUnmount() {
@@ -38,12 +38,12 @@ export default class Portal extends Component {
     if (this.state.isAnimationStarted) return;
 
     const { portal } = this.props;
-    const { startTime } = portal; // Replace appearanceTime with startTime
+    const { appearanceTime } = portal; // Replace appearanceTime with startTime
 
     this.animationTimer = setTimeout(() => {
       this.setState({ isAnimationStarted: true });
       this.animate();
-    }, startTime); // Use startTime instead of appearanceTime
+    }, appearanceTime); // Use startTime instead of appearanceTime
   };
 
   stopAnimation = () => {

@@ -26,13 +26,49 @@ export default function GameScreen() {
       startTime: 0,
     },
     {
-      position: { x: width, y: height - 50 },
+      position: { x: width + width, y: height - 40 },
       width: width / 3,
       height: 20,
       startTime: 5000,
     },
     {
-      position: { x: width, y: height - 60 },
+      position: { x: width + width + 100 , y: height - 60 },
+      width: width / 6,
+      height: 20,
+      startTime: 7000,
+    },
+    {
+      position: { x: width + width - 100, y: height - 20 },
+      width: width / 2,
+      height: 20,
+      startTime: 7000,
+    },
+    {
+      position: { x: width+ width +width, y: height - 20 },
+      width: width / 5,
+      height: 20,
+      startTime: 7000,
+    },
+    {
+      position: { x: width+ width +width +100, y: height - 40 },
+      width: width / 5,
+      height: 20,
+      startTime: 7000,
+    },
+    {
+      position: { x: width+ width +width +200, y: height - 60 },
+      width: width / 5,
+      height: 20,
+      startTime: 7000,
+    },
+    {
+      position: { x: width+ width +width +300, y: height - 80 },
+      width: width / 5,
+      height: 20,
+      startTime: 7000,
+    },
+    {
+      position: { x: width+ width +width +400, y: height - 100 },
       width: width / 5,
       height: 20,
       startTime: 7000,
@@ -42,7 +78,7 @@ export default function GameScreen() {
 
   const [spikes, setSpikes] = useState([
     {
-      position: { x: width - width / 4, y: height - 25 },
+      position: { x: width    , y: height - 25 },
       width: 10,
       height: 10,
       startTime: 0,
@@ -53,6 +89,13 @@ export default function GameScreen() {
       height: 10,
       startTime: 7000,
     },
+    {
+      position: { x: width +10+ width / 2 , y: height - 25 },
+      width: 10,
+      height: 10,
+      startTime: 7000,
+    },
+    
     
   ]);
 
@@ -60,7 +103,7 @@ export default function GameScreen() {
   const [portal, setPortal] = useState([
     
     {
-      position: { x: width, y: height - 100 },
+      position: { x:  width*3 +width/3 + 30, y: height - 200 }, // 3*width
       width: 100,
       height: 100,
       //width: width / 3,

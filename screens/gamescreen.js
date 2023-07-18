@@ -124,6 +124,7 @@ export default function GameScreen() {
     setPlatforms([]);
     setSpikes([]);
     setPortal([]);
+   
 
     Vibration.vibrate(ONE_SECOND_IN_MS);
 
@@ -141,27 +142,52 @@ export default function GameScreen() {
     
   
 
-  const handlePlayAgain = () => {
-    // Handle the "Play Again" button press
-    setShowMessage(false); // Hide the message
-    // Additional logic as needed
-  };
+const handlePlayAgain = () => {
+  navigation.navigate('homescreen');
+  navigation.navigate('gamescreen'); //LOOOOOOOOOOOOOOOOL  i dont know how to refresh the page so this is what i came up with
+  setShowMessage(false); // Hide the message
+
+ 
+};
+
+  
 
   return (
     <View style={styles.container}>
       <ImageBackground source={backG} style={styles.backgroundImage}>
         <Player player={player} platforms={platforms} spikes={spikes} portal={portal} />
         {platforms.map((platform, index) => (
-          <Platform key={index} player={player} platform={platform} stopAnimations={stopAnimations} />
+          <Platform
+            key={index}
+            player={player}
+            platform={platform}
+            stopAnimations={stopAnimations}
+            isAnimationStarted={platform.isAnimationStarted} // Pass isAnimationStarted prop
+          />
         ))}
         {spikes.map((spike, index) => (
-          <Spike key={index} player={player} spike={spike} stopAnimations={stopAnimations} />
+          <Spike
+            key={index}
+            player={player}
+            spike={spike}
+            stopAnimations={stopAnimations}
+            isAnimationStarted={spike.isAnimationStarted} // Pass isAnimationStarted prop
+          />
         ))}
         {portal.map((portal, index) => (
-          <Portal key={index} player={player} portal={portal} platforms={platforms} spikes={spikes} stopAnimations={stopAnimations} />
+          <Portal
+            key={index}
+            player={player}
+            portal={portal}
+            platforms={platforms}
+            spikes={spikes}
+            stopAnimations={stopAnimations}
+            isAnimationStarted={portal.isAnimationStarted} // Pass isAnimationStarted prop
+          />
         ))}
-
-        {showMessage && ( // Conditionally render the message
+  
+       
+  {showMessage && ( // Conditionally render the message
           <View style={styles.messageContainer}>
             <View style={styles.blueBox}>
               <Text style={styles.messageText}>Oops, you lost!</Text>

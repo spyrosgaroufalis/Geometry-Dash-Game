@@ -52,25 +52,25 @@ export default function GameScreen() {
       startTime: 7000,
     },
     {
-      position: { x: width+ width +width +100, y: height - 40 },
+      position: { x: width+ width +width +120, y: height - 40 },
       width: width / 5,
       height: 20,
       startTime: 7000,
     },
     {
-      position: { x: width+ width +width +200, y: height - 60 },
+      position: { x: width+ width +width +240, y: height - 60 },
       width: width / 5,
       height: 20,
       startTime: 7000,
     },
     {
-      position: { x: width+ width +width +300, y: height - 80 },
+      position: { x: width+ width +width +360, y: height - 80 },
       width: width / 5,
       height: 20,
       startTime: 7000,
     },
     {
-      position: { x: width+ width +width +400, y: height - 100 },
+      position: { x: width+ width +width +480, y: height - 100 },
       width: width / 5,
       height: 20,
       startTime: 7000,
@@ -105,7 +105,7 @@ export default function GameScreen() {
   const [portal, setPortal] = useState([
     
     {
-      position: { x:  width*3 +width/3 + 30, y: height - 200 }, // 3*width
+      position: { x:  width*3 +width/3 + 50, y: height - 200 }, // 3*width
       width: 100,
       height: 100,
       //width: width / 3,
@@ -117,8 +117,36 @@ export default function GameScreen() {
 
   const [showMessage, setShowMessage] = useState(false); // State to control the display of the message
   const navigation = useNavigation();
+  const [elapsedTime, setElapsedTime] = useState(0); // State to track the elapsed time
+  const [showEndMessage, setShowEndMessage] = useState(false); // State to control the display of the message
+  const [isAnimationsStopped, setIsAnimationsStopped] = useState(false); // State to track if animations are stopped
 
-  
+  useEffect(() => {
+    let interval;
+
+    const handleTimerTick = () => {
+      setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
+    };
+
+    if (!showEndMessage && !isAnimationsStopped) {
+      interval = setInterval(handleTimerTick, ONE_SECOND_IN_MS);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [showEndMessage, isAnimationsStopped]);
+
+  useEffect(() => {
+    if (elapsedTime >= 25 && !isAnimationsStopped) {
+      setShowEndMessage(true); // Set the state to display the message
+    }
+  }, [elapsedTime, isAnimationsStopped]);
+
+
+
+
+
 
   const stopAnimations = () => {
     setPlatforms([]);
@@ -129,6 +157,7 @@ export default function GameScreen() {
     Vibration.vibrate(ONE_SECOND_IN_MS);
 
     setShowMessage(true); // Set the state to display the message
+    setIsAnimationsStopped(true); // Set the state to indicate that animations are stopped
   };
 
   const handleGoBack = () => {
@@ -191,6 +220,22 @@ const handlePlayAgain = () => {
           <View style={styles.messageContainer}>
             <View style={styles.blueBox}>
               <Text style={styles.messageText}>Oops, you lost!</Text>
+              <View style={styles.buttonContainer}>
+                <Text style={styles.button} onPress={handleGoBack}>
+                  Go Back
+                </Text>
+                <Text style={styles.button} onPress={handlePlayAgain}>
+                  Play Again
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
+         {showEndMessage && (
+          <View style={styles.messageContainer}>
+            <View style={styles.blueBox}>
+              <Text style={styles.messageText}>🎉🎉🎉Congratulations! 🎉🎉🎉</Text>
+              <Text style={styles.messageText}>You finished the First Level!!</Text>
               <View style={styles.buttonContainer}>
                 <Text style={styles.button} onPress={handleGoBack}>
                   Go Back

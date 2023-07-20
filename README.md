@@ -51,8 +51,8 @@ Rocket Mode( multiple jumps added)=
 
 Collisions and game over ( using working navigation buttons )=
 
+![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/ef9c7f25-a205-4097-8b6e-938fcfa8e132)
 
-![image](https://github.com/garouuuu/Geometry-Dash-Game/assets/127393684/5a07afa8-c79d-49be-8bcd-d34aa5152beb)
 
 
 
